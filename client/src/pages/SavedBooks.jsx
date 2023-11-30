@@ -14,12 +14,11 @@ import { removeBookId } from '../utils/localStorage';
 import { GET_ME } from '../utils/queries'
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
 
-  // use this to determine if `useEffect()` hook needs to run again
-  const { loading, data } = useQuery(GET_ME, {
-    // variables: whoknows
-  })
+  const { loading, data } = useQuery(GET_ME, { token })
+  console.log(data)
+  const userData = data?.token || [];
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
