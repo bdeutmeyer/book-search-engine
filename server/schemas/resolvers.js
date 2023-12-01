@@ -28,24 +28,21 @@ const resolvers = {
       if (!correctPw) {
         throw AuthenticationError;
       }
-
         const token = signToken(user);
-
         return { token, user };
     },
-    saveBook: async (parent, input, context) => {
+    saveBook: async (parent, { input }, context) => {
       const updatedUser = await User.findOneAndUpdate(
         {_id: context.user._id},
         { $addToSet: { savedBooks: input } },
         { new: true, runValidators: true }
-        )
-        
+        )        
         return updatedUser;
     },
-    removeBook: async (parent, {args}, context) => {
+    removeBook: async (parent, { bookId }, context) => {
       const updatedUser = await User.findOneAndUpdate(
         { _id: context.user._id },
-        { $pull: { savedBooks: { bookId: args.bookId } } },
+        { $pull: { savedBooks: { bookId } } },
         { new: true }
       )
       return updatedUser;
