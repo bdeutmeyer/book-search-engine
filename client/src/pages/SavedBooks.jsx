@@ -16,10 +16,11 @@ import { GET_ME } from '../utils/queries'
 const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
   const token = Auth.loggedIn() ? Auth.getToken() : null;
-  const { loading, data } = useQuery(GET_ME)
+  const { loading, data } = useQuery(GET_ME, token);
+  console.log(data)
   const userData = data?.token || [];
   const userDataLength = Object.keys(userData).length;
-
+ 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
