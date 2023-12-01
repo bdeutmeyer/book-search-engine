@@ -61,12 +61,9 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
-
+  const token = Auth.loggedIn() ? Auth.getToken() : null;
   const [saveBook, { error, data }] = useMutation(SAVE_BOOK, {
-    refetchQueries: [
-      GET_ME,
-      'me'
-    ]
+    variables: token
   });
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
@@ -81,7 +78,7 @@ const SearchBooks = () => {
     }
 
     try {
-      const { data } = await saveBook({
+      const {data} = await saveBook({
         variables: {
           bookId: bookToSave.bookId,
           authors: bookToSave.authors,
@@ -89,13 +86,12 @@ const SearchBooks = () => {
           title: bookToSave.title,
           image: bookToSave.image,
           link: bookToSave.link
-        }, 
-        context: {_id: Auth.getProfile().authenticatedPerson._id}
+        }
       } )
 
-      if (!data.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!saveBook.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);

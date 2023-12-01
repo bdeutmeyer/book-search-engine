@@ -13,6 +13,7 @@ const SignupForm = () => {
   const [showAlert, setShowAlert] = useState(false);
 
   const [addUser, { error, data }] = useMutation(ADD_USER);
+  console.log(data)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
