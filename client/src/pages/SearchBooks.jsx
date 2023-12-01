@@ -13,6 +13,7 @@ import Auth from '../utils/auth';
 import { saveBook, searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import { SAVE_BOOK } from '../utils/mutations';
+import { GET_ME } from '../utils/queries';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -60,7 +61,13 @@ const SearchBooks = () => {
       console.error(err);
     }
   };
-  const [saveBook, { error, data }] = useMutation(SAVE_BOOK);
+
+  const [saveBook, { error, data }] = useMutation(SAVE_BOOK, {
+    refetchQueries: [
+      GET_ME,
+      'me'
+    ]
+  });
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
@@ -76,14 +83,17 @@ const SearchBooks = () => {
     try {
       const { data } = await saveBook({
         variables: {
+          bookId: bookToSave.bookId,
+          authors: bookToSave.authors,
+          description: bookToSave.description,
+          title: bookToSave.title,
+          image: bookToSave.image,
+          link: bookToSave.link
+        }, 
+        context: {_id: Auth.getProfile().authenticatedPerson._id}
+      } )
 
-        },
-        refetchQueries: [
-          
-        ]
-      })
-
-      if (!saveBook.ok) {
+      if (!data.ok) {
         throw new Error('something went wrong!');
       }
 
